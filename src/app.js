@@ -66,10 +66,10 @@ const run = async () => {
 
     // cancel orders falling over min/max range
     const askOrdersToCancel = ledger.openOrders.filter(
-      (o) => o.type === 'ASK' && o.price > sellBidThreshold.min,
+      (o) => o.type === 'ASK' && o.price > sellBidThreshold.max,
     )
     const bidOrdersToCancel = ledger.openOrders.filter(
-      (o) => o.type === 'BID' && o.price < buyAskThreshold.max,
+      (o) => o.type === 'BID' && o.price < buyAskThreshold.min,
     )
 
     askOrdersToCancel.forEach((o) =>
@@ -77,10 +77,18 @@ const run = async () => {
     )
     bidOrdersToCancel.forEach((o) => ledger.cancelOrder(o, buyAskThreshold.max))
 
-    // Place new orders
-    if (ledger.openOrders.length < config.MIN_OPEN_ORDERS) {
-      for (let i = 0; i < config.MIN_OPEN_ORDERS / 2; i++) {
+    // Place new orders if open order below minimum
+    const openAsk = ledger.openOrders.filter((o) => o.type === 'ASK')
+    const openBid = ledger.openOrders.filter((o) => o.type === 'BID')
+
+    if (openAsk.length < config.MIN_OPEN_ORDERS) {
+      for (let i = 0; i < config.MIN_OPEN_ORDERS; i++) {
         buy(sellBidThreshold, sellBidLiquidity)
+      }
+    }
+
+    if (openBid.length < config.MIN_OPEN_ORDERS) {
+      for (let i = 0; i < config.MIN_OPEN_ORDERS; i++) {
         sell(buyAskThreshold, buyAskLiquidity)
       }
     }
