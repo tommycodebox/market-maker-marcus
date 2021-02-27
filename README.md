@@ -9,11 +9,20 @@ $ yarn
 ```
 
 ## Usage
+
 ```sh
 $ yarn start
 ```
 
 ## Testing
+
 ```sh
 $ yarn test
 ```
+
+## Possible Improvements
+
+- Add techical indicator algorithms that can use historical data and indicate possible buy/sell opportunities
+- Configure a list of pairs [+ add balances] and loop over those to increase the exposure
+- Adjust refresh rate to increase market monitoring speed
+- Add simple frontend that can visualize process in real time, view balances, stop/start bot
